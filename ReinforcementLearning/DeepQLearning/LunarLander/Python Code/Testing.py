@@ -35,7 +35,6 @@ for episode in range(num_test_episodes):
     
     reward_per_test_episode.append(test_episode_reward)
     print(f"Episode {episode:3d} | Reward: {test_episode_reward:.2f}")
-
 #env.close()
 
 avg_test_reward = np.mean(reward_per_test_episode)
