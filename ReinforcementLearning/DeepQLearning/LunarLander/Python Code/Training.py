@@ -74,14 +74,13 @@ class DQN(nn.Module): #gets atributes from nn.Module
 """
 BUFFER_CAPACITY: max number of transitions the buffer can store
 BATCH_SIZE: desired number of transitions to sample from the buffer
+MIN_EXPERIENCES: minimum number of transitions stored in the buffer before sampling
 EPSILON_START: starting value for epsilon
 EPSILON_END: final value for epsilon
-EPSILON_DECAY: rate of exponential decay for epsilon
-TAU: update rate for target NN
 LR: same as alpha in mathematical formula, i.e learning rate of the optimizer
 GAMMA: time discount factor
-NUM_EPISODES: 
-MAX_STEPS:
+NUM_EPISODES: total number of learning episodes
+TARGET_UPDATE: target network updating frequency (in steps)
 """
 BUFFER_CAPACITY = 10000
 BATCH_SIZE = 128
@@ -111,6 +110,11 @@ optimizer = optim.Adam(net.parameters(), lr=LR)
 
 
 def get_action(neural_net, state, epsilon):
+    """
+    Performs epsilon-greedy action selection
+    
+    Inputs: (1) neural network in training, (2) current state, (3) current epsilon 
+    """
     if random.random() < epsilon:
         return env.action_space.sample()
     else:
@@ -118,7 +122,17 @@ def get_action(neural_net, state, epsilon):
         q_table = neural_net(state)
         return torch.argmax(q_table).item()
     
+
+    
 def SGD(replay_buffer, min_occupied, num_samples, neural_net, target_nn, time_discount):
+    """
+    Samples from the replay buffer and performs an optimization step on the training neural netwrok.
+
+    Inputs: (1) replay buffer to sample from, (2) minimum number of stored transitions before sampling, 
+    (3) number of transitions to sample, (4) training neural network, 
+    (5) target neural netwrok, (6) gamma for target value computation.
+    """
+
     if replay_buffer.len() < min_occupied:
         return
     
@@ -144,7 +158,15 @@ def SGD(replay_buffer, min_occupied, num_samples, neural_net, target_nn, time_di
     optimizer.step()
 
 
-def train(reward_per_episode=[], steps=0):
+def train():
+    """
+    Performs Deep Q-Learning Algorithm
+
+    Output: reward obtained in each episode (for plotting purposes)
+    """
+    reward_per_episode=[]
+    steps=0
+
     for episode in range(NUM_EPISODES):
         done = False
         truncated = False
@@ -177,9 +199,12 @@ def train(reward_per_episode=[], steps=0):
 #endregion
 
 
-#region Calling training functions and plotting
+#region Main
 
 if __name__ == "__main__":
+    """
+    Calls training process and plots results
+    """
 
     reward_per_episode = train()
     print("Training complete")
