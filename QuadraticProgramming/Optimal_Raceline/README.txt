@@ -6,7 +6,7 @@ The goal is to find the optimal raceline for any given track that gives the fast
 The solution is based on defining and solving a QP (quadratic programming) problem that describes this challenge to obtain the minimum curvature path along the track. Afterwards, a velocity profile is calculated by identifying the maximum curvature points in the raceline and assigning critical speeds to those points.
 
 **Results**
-This solution was tested for the Monza circuit and the results speak for themselves considering lap time and average velocity is greatly improved in the scenario where the car    follows the optimal raceline vs the centerline. They are as follows:
+This solution was tested for the Spa circuit and the results speak for themselves considering lap time and average velocity is greatly improved in the scenario where the car    follows the optimal raceline vs the centerline. They are as follows:
 
 	- Centerline avg. velocity: 31.56 m/s
 	- Optimal raceline avg. velocity: 52.14 m/s
